@@ -1,55 +1,83 @@
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Login {
-    static public void main(String[] args){
+    public static void main(String[] args) {
+        showLoginWindow();
+    }
+
+    //取消了main函数，改成showLoginWindow方法，以便在Main类中调用
+    public static void showLoginWindow() {
         JFrame loginFrame = new JFrame("Login");
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        loginFrame.setSize(400,200);
+        loginFrame.setSize(400, 220);
         loginFrame.setLayout(null);
+        loginFrame.setLocationRelativeTo(null);
 
+        //添加账号和密码的标签
+        JLabel usernameLabel = new JLabel("Account:");
+        usernameLabel.setSize(80, 30);
+        usernameLabel.setLocation(50, 40);
+
+        //输入账号的文本框
         JTextField username = new JTextField();
-        username.setSize(100,50);
-        username.setLocation(50,50);
+        username.setSize(160, 30);
+        username.setLocation(130, 40);
+
+        JLabel passwordLabel = new JLabel("Password:");
+        passwordLabel.setSize(80, 30);
+        passwordLabel.setLocation(50, 80);
+
+        //输入密码的文本框，输入内容会被隐藏
+        JPasswordField password = new JPasswordField();
+        password.setSize(160, 30);
+        password.setLocation(130, 80);
 
         JButton loginButton = new JButton("Login");
-        loginButton.setSize(100,30);
-        loginButton.setLocation(50,100);
+        loginButton.setSize(100, 30);
+        loginButton.setLocation(130, 130);
 
         loginButton.addActionListener(e -> {
             String thisUser = username.getText();
-            Scanner Users = null;
-            try {
-                Users = new Scanner(new File("src/Users.txt"));
-            } catch (FileNotFoundException ex) {
-                throw new RuntimeException(ex);
-            }
-            ArrayList<String> users = new ArrayList<>();
-            while (Users.hasNextLine()) {
-                users.add(Users.nextLine());
-            }
+            //getPassword返回char[]，我们要把它转换到String
+            String thisPassword = new String(password.getPassword());
             boolean match = false;
-            for (String user : users) {
-                System.out.println(user);
-                if (user.equals(thisUser)) {
-                    match = true;
-                    break;
+
+            try {
+                //从Users.txt中读取已经注册的账号和密码
+                Scanner in = new Scanner(new File("src/Users.txt"));
+                while (in.hasNext()) {
+                    String currentUsername = in.next();
+                    String currentPassword = in.next();
+
+                    //如果账号和密码都相同，就说明登录成功
+                    if (currentUsername.equals(thisUser)
+                            && currentPassword.equals(thisPassword)) {
+                        match = true;
+                        break;
+                    }
                 }
+                in.close();
+            } catch (FileNotFoundException ex) {
+                JOptionPane.showMessageDialog(loginFrame, "User file not found.");
+                return;
             }
+
             if (match) {
-                JOptionPane.showMessageDialog(loginFrame,"Welcome!");
+                JOptionPane.showMessageDialog(loginFrame, "Welcome!");
+                loginFrame.dispose();
+                new GameFrame();
             } else {
-                JOptionPane.showMessageDialog(loginFrame,"no record found.");
+                JOptionPane.showMessageDialog(loginFrame, "Wrong account or password.");
             }
         });
+
+        loginFrame.add(usernameLabel);
         loginFrame.add(username);
+        loginFrame.add(passwordLabel);
+        loginFrame.add(password);
         loginFrame.add(loginButton);
         loginFrame.setVisible(true);
     }
