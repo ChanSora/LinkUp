@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Register {
     public static void showRegisterWindow() {
         JFrame registerFrame = new JFrame("Register");
-        registerFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        registerFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         registerFrame.setSize(400, 240);
         registerFrame.setLayout(null);
         registerFrame.setLocationRelativeTo(null);
@@ -93,6 +93,7 @@ public class Register {
         registerFrame.add(passwordLabel);
         registerFrame.add(password);
         registerFrame.add(registerButton);
-        registerFrame.setVisible(true);
+//        registerFrame.setVisible(true);
+        WindowManager.switchTo(registerFrame);
     }
 }

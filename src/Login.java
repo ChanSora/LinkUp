@@ -11,7 +11,7 @@ public class Login {
     //取消了main函数，改成showLoginWindow方法，以便在Main类中调用
     public static void showLoginWindow() {
         JFrame loginFrame = new JFrame("Login");
-        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         loginFrame.setSize(400, 220);
         loginFrame.setLayout(null);
         loginFrame.setLocationRelativeTo(null);
@@ -68,7 +68,7 @@ public class Login {
             if (match) {
                 JOptionPane.showMessageDialog(loginFrame, "Welcome!");
                 loginFrame.dispose();
-                new GameFrame();
+                WindowManager.switchTo(new GameFrame());
             } else {
                 JOptionPane.showMessageDialog(loginFrame, "Wrong account or password.");
             }
@@ -79,6 +79,8 @@ public class Login {
         loginFrame.add(passwordLabel);
         loginFrame.add(password);
         loginFrame.add(loginButton);
-        loginFrame.setVisible(true);
+
+        WindowManager.switchTo(loginFrame);
+//        loginFrame.setVisible(true);
     }
 }

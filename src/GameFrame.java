@@ -13,7 +13,7 @@ public class GameFrame extends JFrame {
     /* 构造函数，设置游戏界面，而不是在Main类中 */
     public GameFrame() {
         super("连连看游戏");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(WIDTH, HEIGHT);
         setLocationRelativeTo(null);
 
