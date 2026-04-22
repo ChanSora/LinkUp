@@ -5,11 +5,17 @@ import java.util.Collections;
 public class LinkUpCLI {
     static private final int HARD_PATTERN_NUMBER = 12;
     static private final int EASY_PATTERN_NUMBER = 5;
-    static int count = 0;
+    static int count = 0, pattern_number = 0;
     static Random rand = new Random();
     public static void main(String[] args) {
         rand.setSeed(System.currentTimeMillis());
         Scanner input = new Scanner(System.in);
+        System.out.println("Welcome to the Link Up CLI!");
+        System.out.println("Please enter the mode (1.Easy or 2.Hard) would like to play:");
+        int type = input.nextInt();
+        if (type == 1) pattern_number = EASY_PATTERN_NUMBER;
+        else if (type == 2) pattern_number = HARD_PATTERN_NUMBER;
+        System.out.println("Please enter the area of the chessboard:(a * b)");
         int rows = input.nextInt();
         int cols = input.nextInt();
         int [][] grid = new int [rows][cols];
@@ -32,7 +38,7 @@ public class LinkUpCLI {
         Pair a_ = new Pair(x1 - 1, y1 - 1);
         Pair b_ = new Pair(x2 + 1, y2 + 1);
         if (x1 == x2) {
-            pattern = rand.nextInt(HARD_PATTERN_NUMBER) + 1;
+            pattern = rand.nextInt(pattern_number) + 1;
             for (int i = y1; i <= y2; i++) grid[x1][i] = pattern;
             generatePattern(grid, a_, b_, rows, cols, pairs);
         }
@@ -49,7 +55,7 @@ public class LinkUpCLI {
             Pair p2 = pairs.get(1);
             pairs.remove(p1);
             pairs.remove(p2);
-            pattern = rand.nextInt(HARD_PATTERN_NUMBER) + 1;
+            pattern = rand.nextInt(pattern_number) + 1;
             grid[p1.x][p1.y] = pattern;
             grid[p1.x][p2.y] = pattern;
         }
