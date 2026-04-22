@@ -1,86 +1,67 @@
-import javax.swing.*;
+import javax.swing.*;//包含和Swing相关的所有类，如JFrame、JButton等
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 
 public class Main {
-
-    private static final int ROWS = 5;
-    private static final int COLS = 5;
-    private static final int WIDTH = 600;
-    private static final int HEIGHT = 600;
-
     public static void main(String[] args) {
-        JFrame frame = new JFrame("网格中的图片");
+        SwingUtilities.invokeLater(Main::showMainMenu);//把showMainMenu方法放在GUI线程中执行，而不是在主线程中直接调用
+    }
+
+    /* 显示主菜单 */
+    private static JFrame createFrame(){
+        JFrame frame = new JFrame("Link Up");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(WIDTH, HEIGHT);
-        frame.setLocationRelativeTo(null);
+        frame.setSize(360, 300);
+        frame.setLocationRelativeTo(null);//窗口居中
+        frame.setLayout(new BorderLayout(10, 10));
+        return frame;
+    }
 
-        // 创建网格面板
-        JPanel gridPanel = new JPanel(new GridLayout(ROWS, COLS, 5, 5));
+    /* 添加标题 */
+    private static void createTitle(JFrame frame){
+        JLabel title = new JLabel("连连看", SwingConstants.CENTER);
+        title.setFont(new Font("Microsoft YaHei", Font.BOLD, 28));
+        frame.add(title, BorderLayout.NORTH);
+    }
 
-        // 加载一张示例图片（可以换成你自己的图片
-        String imageUrl = "./resources/1.png";
-        ImageIcon originalIcon = new ImageIcon(imageUrl);
+    /* 创建主菜单界面 */
+    private static void createButton(JFrame frame){
+        JButton guestMode = new JButton("游客模式");
+        JButton loginMode = new JButton("登录模式");
+        JButton registerMode = new JButton("注册模式");
+        JButton exitMode = new JButton("退出");
 
+        /* 监听游客，登录，注册和退出按钮 */
+        guestMode.addActionListener(e -> {
+            frame.dispose();
+            new GameFrame();
+        });
 
-        // 缩放图片到合适大小（根据网格大小调整）
-        Image scaledImage = originalIcon.getImage().getScaledInstance(WIDTH / COLS * 4 / 5, HEIGHT / ROWS * 4 / 5, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+        loginMode.addActionListener(e -> {
+            frame.dispose();
+            Login.showLoginWindow();//接入登录窗口
+        });
 
-        // 创建网格
-        for (int i = 0; i < ROWS * COLS; i++) {
-            ImageGridCell cell = new ImageGridCell(scaledIcon);
-            cell.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    cell.toggleRed();  // 点击变红
-                }
-            });
-            gridPanel.add(cell);
-        }
+        registerMode.addActionListener(e -> {
+            frame.dispose();
+            Register.showRegisterWindow();//接入注册窗口
+        });
 
-        frame.add(gridPanel);
+        exitMode.addActionListener(e -> System.exit(0));
+
+        JPanel buttonPanel = new JPanel(new GridLayout(4, 1, 12, 12));//4行1列，间距设置为12像素
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 70, 30, 70));
+        buttonPanel.add(guestMode);
+        buttonPanel.add(loginMode);
+        buttonPanel.add(registerMode);
+        buttonPanel.add(exitMode);
+
+        frame.add(buttonPanel, BorderLayout.CENTER);
+    }
+
+    private static void showMainMenu() {
+        JFrame frame = createFrame();
+        createTitle(frame);
+        createButton(frame);
         frame.setVisible(true);
-    }
-
-    // 创建占位图标（当没有图片时使用）
-    private static ImageIcon createPlaceholderIcon() {
-        BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2d = img.createGraphics();
-        g2d.setColor(Color.LIGHT_GRAY);
-        g2d.fillRect(0, 0, 100, 100);
-        g2d.setColor(Color.BLACK);
-        g2d.drawString("图片", 30, 50);
-        g2d.dispose();
-        return new ImageIcon(img);
-    }
-}
-
-/**
- * 带图片的网格单元，支持点击变红
- */
-class ImageGridCell extends JPanel {
-    private ImageIcon icon;
-    private final Color normalColor = new Color(240, 240, 240);
-    private boolean isRed = false;
-
-    public ImageGridCell(ImageIcon icon) {
-        this.icon = icon;
-        setLayout(new BorderLayout());
-        setBackground(normalColor);
-        setBorder(BorderFactory.createLineBorder(Color.GRAY));
-
-        // 显示图片的标签
-        JLabel imageLabel = new JLabel(icon);
-        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        add(imageLabel, BorderLayout.CENTER);
-    }
-
-    public void toggleRed() {
-        isRed = !isRed;
-        setBackground(isRed ? Color.RED : normalColor);
-        repaint();
     }
 }

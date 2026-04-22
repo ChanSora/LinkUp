@@ -1,0 +1,98 @@
+import javax.swing.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class Register {
+    public static void showRegisterWindow() {
+        JFrame registerFrame = new JFrame("Register");
+        registerFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        registerFrame.setSize(400, 240);
+        registerFrame.setLayout(null);
+        registerFrame.setLocationRelativeTo(null);
+
+        //添加账号和密码的标签
+        JLabel usernameLabel = new JLabel("Account:");
+        usernameLabel.setSize(80, 30);
+        usernameLabel.setLocation(50, 40);
+
+        //输入新账号的文本框
+        JTextField username = new JTextField();
+        username.setSize(160, 30);
+        username.setLocation(130, 40);
+
+        JLabel passwordLabel = new JLabel("Password:");
+        passwordLabel.setSize(80, 30);
+        passwordLabel.setLocation(50, 80);
+
+        //输入新密码的文本框，因为是passwordField所以输入内容会被隐藏
+        JPasswordField password = new JPasswordField();
+        password.setSize(160, 30);
+        password.setLocation(130, 80);
+        //注册按钮
+        JButton registerButton = new JButton("Register");
+        registerButton.setSize(100, 30);
+        registerButton.setLocation(130, 130);
+
+        //注册按钮的监听器，点击后会把新账号和新密码写入Users.txt
+        registerButton.addActionListener(e -> {
+            String newUser = username.getText();
+            String newPassword = new String(password.getPassword());
+            //需要先检查账密是否合法
+            if (newUser.isEmpty() || newPassword.isEmpty()) {
+                JOptionPane.showMessageDialog(registerFrame, "Account or password cannot be empty.");
+                return;
+            }
+
+            boolean exists = false;
+
+            try {
+                //重复性检查，即不能存在两个重复的用户名
+                Scanner in = new Scanner(new File("src/Users.txt"));
+                while (in.hasNext()) {
+                    String currentUsername = in.next();
+                    if (in.hasNext()) {
+                        in.next();
+                    }
+
+                    if (currentUsername.equals(newUser)) {
+                        exists = true;
+                        break;
+                    }
+                }
+                in.close();
+            } catch (FileNotFoundException ex) {
+                JOptionPane.showMessageDialog(registerFrame, "User file not found.");
+                return;
+            }
+
+            if (exists) {
+                JOptionPane.showMessageDialog(registerFrame, "Account already exists.");
+                return;
+            }
+
+            try {
+                //把新账号和新密码追加写入Users.txt
+                FileWriter writer = new FileWriter("src/Users.txt", true);
+                writer.write(System.lineSeparator() + newUser + " " + newPassword);
+                writer.close();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(registerFrame, "Register failed.");
+                return;
+            }
+
+            JOptionPane.showMessageDialog(registerFrame, "Register success!");
+            registerFrame.dispose();
+            Login.showLoginWindow();
+        });
+
+        registerFrame.add(usernameLabel);
+        registerFrame.add(username);
+        registerFrame.add(passwordLabel);
+        registerFrame.add(password);
+        registerFrame.add(registerButton);
+        registerFrame.setVisible(true);
+    }
+}
