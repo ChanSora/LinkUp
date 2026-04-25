@@ -1,0 +1,49 @@
+import util.Utils.Pair;
+import java.util.ArrayList;
+
+public class GameCore {
+    private final int[][] grid;
+    private final int rows;
+    private final int cols;
+
+    public ArrayList<Pair> Points;
+
+    static int pattern_number = 0;
+
+    public GameCore(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        grid = new int[rows][cols];
+        Points = new ArrayList<>();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                grid[i][j] = 0;
+            }
+        }
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public int getCols() {
+        return cols;
+    }
+
+    public int getGrid(int i, int j) {
+        return grid[i][j];
+    }
+
+    public void setGrid(int i, int j, int value) {
+        this.grid[i][j] = value;
+    }
+
+    public void showGrid() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print(grid[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
