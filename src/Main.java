@@ -36,7 +36,6 @@ public class Main {
                 WindowManager.switchTo(new GameFrame(hardMode));
             }
         });
-
         userMode.addActionListener(e -> {
             Integer result = UserModeSelector.chooseUserAction(frame);
             if (result == null) {

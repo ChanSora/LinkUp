@@ -11,9 +11,9 @@ public class LinkUpCLI {
         System.out.println("Welcome to the Link Up CLI!");
         System.out.println("Please enter the mode (1.Easy or 2.Hard) would like to play:");
 
-        int type = input.nextInt();
-        if (type == 1) GameCore.pattern_number = Constants.EASY_PATTERN_NUMBER;
-        else if (type == 2) GameCore.pattern_number = Constants.HARD_PATTERN_NUMBER;
+        int type = input.nextInt(), pattern_number = 0;
+        if (type == 1) pattern_number = Constants.EASY_PATTERN_NUMBER;
+        else if (type == 2) pattern_number = Constants.HARD_PATTERN_NUMBER;
 
         System.out.println("Please enter the area of the chessboard:(a * b)");
 
@@ -24,8 +24,27 @@ public class LinkUpCLI {
         Pair A0 = new Pair(init_x, init_y);
         Pair B0 = new Pair(init_x, init_y + 1);
 
-        GameCore game = new GameCore(rows, cols);
-        GameMethods.generatePattern(game, A0, B0);
+        GameCore game = new GameCore(rows, cols, pattern_number);
+        GameMethods.generatePattern(game);
         game.showGrid();
+
+        System.out.println("Now I will telling you the rule of this game:");
+        System.out.println("First, you need to choose two points, using (x, y) coordinates,");
+        System.out.println("Then, I will check if the two points can be linked with less than 3 lines.");
+        System.out.println("If so, you eliminate them; else, this operation is invalid.");
+        System.out.println("If you eliminate all the blocks, you win.");
+        System.out.println("Now Let's PLAY!");
+
+        while (!game.isAllEliminated()) {
+            System.out.println("Please enter the coordinates of the first point:");
+            int x1 = input.nextInt();
+            int y1 = input.nextInt();
+            System.out.println("Please enter the coordinates of the second point:");
+            int x2 = input.nextInt();
+            int y2 = input.nextInt();
+            Pair P1 = new Pair(x1, y1);
+            Pair P2 = new Pair(x2, y2);
+
+        }
     }
 }

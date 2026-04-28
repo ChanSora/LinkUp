@@ -5,14 +5,15 @@ public class GameCore {
     private final int[][] grid;
     private final int rows;
     private final int cols;
+    public final int pattern_number;
 
     public ArrayList<Pair> Points;
 
-    static int pattern_number = 0;
 
-    public GameCore(int rows, int cols) {
+    public GameCore(int rows, int cols, int pattern_number) {
         this.rows = rows;
         this.cols = cols;
+        this.pattern_number = pattern_number;
         grid = new int[rows][cols];
         Points = new ArrayList<>();
         for (int i = 0; i < rows; i++) {
@@ -46,4 +47,18 @@ public class GameCore {
             System.out.println();
         }
     }
+
+    public void resetGrid() {
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                grid[i][j] = 0;
+    }
+    public boolean isAllEliminated() {
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                if (grid[i][j] != 0) return false;
+        return true;
+    }
+
+
 }

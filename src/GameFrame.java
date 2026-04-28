@@ -1,3 +1,5 @@
+import util.Utils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -201,8 +203,7 @@ public class GameFrame extends JFrame {
     }
 
     private void createBoardData() {
-        gameCore = new GameCore(rows, cols);
-
+        gameCore = new GameCore(rows, cols, patternCount);
         if (hardMode) {
             fillHardBoard();//困难模式的棋盘是10行10列的，直接从左到右从上到下依次填充
         } else {
@@ -212,63 +213,33 @@ public class GameFrame extends JFrame {
 
     /*注意，这里的填充逻辑是最简单的，按照两两成对拜访，后续需要在弄出来可销路径之后更改逻辑*/
     private void fillEasyBoard() {
-        ArrayList<Integer> bag = buildPatternBag(totalPairCount, patternCount);
-        int index = 0;
+        GameCore game_ = new GameCore(4, 4, patternCount);
+        GameMethods.generatePattern(game_);
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                gameCore.setGrid(i, j, game_.getGrid(i, j));
+        game_.resetGrid();
+        GameMethods.generatePattern(game_);
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                gameCore.setGrid(i, j + 5, game_.getGrid(i, j));
 
-        for (int row = 0; row < rows; row++) {
-            for (int block = 0; block < 2; block++) {
-                int startCol;
-                //简单模式有两个4x4矩阵，block=0的时候填充左边的矩阵，block=1的时候填充右边的矩阵
-                if (block == 0) {
-                    startCol = 0;
-                } else {
-                    startCol = 5;
-                }
-
-                //每个矩阵当中是4行4列的格子，每两个格子填充同样的图案，因此col每次增加2
-                for (int col = startCol; col < startCol + 4; col = col + 2) {
-                    int value = bag.get(index);
-                    index++;
-                    gameCore.setGrid(row, col, value);
-                    gameCore.setGrid(row, col + 1, value);
-                }
-            }
-        }
     }
 
     //逻辑和fillEasyBoard完全相同，只不过是10行10列的棋盘，每行每两列填充同样的图案
     private void fillHardBoard() {
-        ArrayList<Integer> bag = buildPatternBag(totalPairCount, patternCount);
-        int index = 0;
-
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col = col + 2) {
-                int value = bag.get(index);
-                index++;
-                gameCore.setGrid(row, col, value);
-                gameCore.setGrid(row, col + 1, value);
-            }
-        }
-    }
-
-    /*函数目标：创建一个list，存储摆放的数据方式*/
-    private ArrayList<Integer> buildPatternBag(int pairCount, int differentPatternCount) {
-        //list：存储的数据为图案编号，然后在后期，例如{1,2,3,4,5}，在后期取出来在棋盘上所表现得效果为
-        // 1 1 2 2 3 3 4 4 5 5(忽略换行)，也就是每两个格子放一个图案，图案的编号由list当中的数字决定
-        ArrayList<Integer> bag = new ArrayList<>();
-
-        //先确保每一个编号都出现一次
-        for (int i = 1; i <= differentPatternCount; i++) {
-            bag.add(i);
-        }
-
-        //当包里面的图案不足以摆满棋盘的时候就一直加
-        while (bag.size() < pairCount) {
-            bag.add(random.nextInt(differentPatternCount) + 1);//考虑到nextint是从0开始，于是加1
-        }
-
-        Collections.shuffle(bag);//打乱顺序
-        return bag;
+//        ArrayList<Integer> bag = buildPatternBag(totalPairCount, patternCount);
+//        int index = 0;
+//
+//        for (int row = 0; row < rows; row++) {
+//            for (int col = 0; col < cols; col = col + 2) {
+//                int value = bag.get(index);
+//                index++;
+//                gameCore.setGrid(row, col, value);
+//                gameCore.setGrid(row, col + 1, value);
+//            }
+//        }
+        GameMethods.generatePattern(gameCore);
     }
 
     //生成并保存所有图案的图片
