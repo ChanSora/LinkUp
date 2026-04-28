@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class Register {
     public static void showRegisterWindow() {
+        //创建register的框架
         JFrame registerFrame = new JFrame("Register");
         registerFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         registerFrame.setSize(400, 240);

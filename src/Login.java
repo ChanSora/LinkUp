@@ -67,8 +67,13 @@ public class Login {
 
             if (match) {
                 JOptionPane.showMessageDialog(loginFrame, "Welcome!");
-                loginFrame.dispose();
-                WindowManager.switchTo(new GameFrame());
+                //如果用户成功进入游戏系统那接下来就是选择困难/简单mode
+                Boolean hardMode = DifficultySelector.chooseDifficulty(loginFrame);
+                if (hardMode == null) {//如果是null(也就是取消或者退出)，直接返回登陆界面
+                    return;
+                }
+                loginFrame.dispose();//关闭并释放这个窗口占用的资源
+                WindowManager.switchTo(new GameFrame(hardMode));
             } else {
                 JOptionPane.showMessageDialog(loginFrame, "Wrong account or password.");
             }
