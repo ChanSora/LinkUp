@@ -53,6 +53,64 @@ public class GameMethods {
         b = new Pair(init_x, init_y + 1);
         generatePattern(game, a, b, bag);
     }
+    static boolean eliminatePattern(GameCore game, Pair a, Pair b) {
+        boolean result = false;
+        if (eliminationInvalid(game, a, b)) {
+            game.setGrid(a.x, a.y, 0);
+            game.setGrid(b.x, b.y, 0);
+            result = true;
+        }
+        return result;
+    }
+    static boolean eliminationInvalid(GameCore game, Pair a, Pair b) {
+        // 如果两点要能在两个直角内可达，棋盘上必须存在一条横线段，从x1到x2可达，或竖线段从y1到y2可达。
+        // 所有的合法路径都应该是三折线形式，我们引入两个辅助函数进行处理。
+        // 首先排除两点不等的情况 和点重合的情况
+        if (game.getGrid(a.x, a.y) != game.getGrid(b.x, b.y)) return false;
+        if (a == b) return false;
+        if (game.getGrid(a.x, a.y) == 0 || game.getGrid(b.x, b.y) == 0) return false;
+        // 然后先看横线段能否存在
+        for (int i = 0; i < game.getRows(); i++) {
+            if (reachableInRow(game, i, a.y, b.y)) {
+                if (reachableInCol(game, a.x, i, a.y) && reachableInCol(game, i, b.x, b.y)) return true;
+            }
+        }
+        // 再看竖线段能否存在
+        for (int i = 0; i < game.getCols(); i++) {
+            if (reachableInCol(game, a.x, b.x, i)) {
+                if (reachableInRow(game, a.x, i, a.y) && reachableInRow(game, b.x, b.y, i)) return true;
+            }
+        }
+        return false;
+    }
+    static boolean reachableInRow(GameCore game, int x, int y1, int y2) {
+        if (y1 > y2) {
+            int tmp = y1;
+            y1 = y2;
+            y2 = tmp;
+        }
+        if (y1 == y2) {
+            return game.getGrid(x, y1) == 0;
+        }
+        for (int i = y1 + 1; i < y2; i++) {
+            if (game.getGrid(x, i) != 0) return false;
+        }
+        return true;
+    }
+    static boolean reachableInCol(GameCore game, int x1, int x2, int y) {
+        if (x1 > x2) {
+            int tmp = x1;
+            x1 = x2;
+            x2 = tmp;
+        }
+        if (x1 == x2) {
+            return game.getGrid(x1, y) == 0;
+        }
+        for (int i = x1 + 1; i < x2; i++) {
+            if (game.getGrid(i, y) != 0) return false;
+        }
+        return true;
+    }
     static boolean isCoordinateValid(int x, int y, int rows, int cols) {
         return (0 <= x && x < rows && 0 <= y && y < cols);
     }
@@ -68,13 +126,10 @@ public class GameMethods {
 
         //当包里面的图案不足以摆满棋盘的时候就一直加
         while (bag.size() < pairCount) {
-            bag.add(rand.nextInt(differentPatternCount) + 1);//考虑到nextint是从0开始，于是加1
+            bag.add(rand.nextInt(differentPatternCount) + 1);//考虑到nextInt是从0开始，于是加1
         }
 
         Collections.shuffle(bag);//打乱顺序
         return bag;
     }
-//    static boolean check(int x, int y, int rows, int cols) {
-//        return (0 <= x && x < rows && 0 <= y && y < cols);
-//    }
 }

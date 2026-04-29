@@ -228,17 +228,6 @@ public class GameFrame extends JFrame {
 
     //逻辑和fillEasyBoard完全相同，只不过是10行10列的棋盘，每行每两列填充同样的图案
     private void fillHardBoard() {
-//        ArrayList<Integer> bag = buildPatternBag(totalPairCount, patternCount);
-//        int index = 0;
-//
-//        for (int row = 0; row < rows; row++) {
-//            for (int col = 0; col < cols; col = col + 2) {
-//                int value = bag.get(index);
-//                index++;
-//                gameCore.setGrid(row, col, value);
-//                gameCore.setGrid(row, col + 1, value);
-//            }
-//        }
         GameMethods.generatePattern(gameCore);
     }
 

@@ -36,6 +36,7 @@ public class LinkUpCLI {
         System.out.println("Now Let's PLAY!");
 
         while (!game.isAllEliminated()) {
+            game.showGrid();
             System.out.println("Please enter the coordinates of the first point:");
             int x1 = input.nextInt();
             int y1 = input.nextInt();
@@ -44,6 +45,13 @@ public class LinkUpCLI {
             int y2 = input.nextInt();
             Pair P1 = new Pair(x1, y1);
             Pair P2 = new Pair(x2, y2);
+            boolean succeed = GameMethods.eliminatePattern(game, P1, P2);
+            if (succeed) {
+                System.out.println("The pattern has been eliminated.");
+
+            } else {
+                System.out.println("The pattern could not be eliminated.");
+            }
 
         }
     }
