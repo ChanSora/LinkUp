@@ -6,6 +6,7 @@ import core.GameMethods;
 import data.GlobalData;
 import storage.SaveStorage;
 import storage.SaveStorage.SaveData;
+import util.AudioPlayer;
 import util.Utils.Pair;
 import javax.swing.*;
 import java.awt.*;
@@ -140,6 +141,7 @@ public class GameFrame extends JFrame {
 
         add(gridPanel);
         setVisible(true);
+        AudioPlayer.startBackgroundMusic();
 
         addWindowListener(new WindowAdapter() {//窗口监听器
             @Override
@@ -147,6 +149,7 @@ public class GameFrame extends JFrame {
                 if (timer != null) {//如果计时器不为null(也就是已经开始了)，就停止计时器，释放资源
                     timer.stop();
                 }
+                AudioPlayer.stopBackgroundMusic();
             }
         });
         if (saveData == null) {
@@ -158,6 +161,12 @@ public class GameFrame extends JFrame {
     }
 
     //上面有一个占位图标，这里创建一个简单的占位图标，显示“Image”字样，颜色是灰色
+    @Override
+    public void dispose() {
+        AudioPlayer.stopBackgroundMusic();
+        super.dispose();
+    }
+
     private JPanel createTopPanel() {
         //两行三列，行列间距都是10，外边距上15下0左15右15
         JPanel topPanel = new JPanel(new GridLayout(2, 3, 10, 10));
@@ -196,6 +205,7 @@ public class GameFrame extends JFrame {
             if (timer != null) {
                 timer.stop();
             }
+            AudioPlayer.stopBackgroundMusic();
             saveGameData(false);
             dispose();
             WindowManager.showMainWindow();
@@ -493,6 +503,7 @@ public class GameFrame extends JFrame {
             ArrayList<Pair> path = GameMethods.findLinkPath(gameCore, currentCell, selectedCell);
             // 两个图案不同：第一个取消，第二个变成新的选中格子
             if (currentValue != selectedValue) {
+                AudioPlayer.playError();
                 comboCount = 0;
                 actionLabel.setText("上一步：图案不同，连消中断");
                 JOptionPane.showMessageDialog(this, "图案不同，不可连线");
@@ -506,6 +517,7 @@ public class GameFrame extends JFrame {
             Timer timer1 = new Timer(100, e -> {
                 // 如果支持连消，那么连续消除系数加1
                 if (GameMethods.eliminatePattern(gameCore, currentCell, selectedCell)) {
+                    AudioPlayer.playSuccess();
                     linkPath = path; // 如果能够消除，那么对于消除的画一下
                     gridPanel.repaint();
                     comboCount++;
@@ -522,6 +534,7 @@ public class GameFrame extends JFrame {
                     cells[_x][_y].resetValue();
                     refreshLabels();
                 } else {
+                    AudioPlayer.playError();
                     comboCount = 0;
                     actionLabel.setText("上一步：图案相同，但不可连线，连消中断");
                     JOptionPane.showMessageDialog(this, "您选择了不可连线的路径");
@@ -572,6 +585,7 @@ public class GameFrame extends JFrame {
             if (leftSeconds == 0) {
                 timer.stop();
                 saveGameData(false);
+                AudioPlayer.playError();
                 JOptionPane.showMessageDialog(this, "失败：时间到，本局游戏结束。");
                 restartGame();
             }
