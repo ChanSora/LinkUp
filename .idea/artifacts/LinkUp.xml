@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="LinkUp">
+    <output-path>$PROJECT_DIR$/out/artifacts/LinkUp</output-path>
+    <root id="archive" name="LinkUp.jar">
+      <element id="archive" name="LinkUp.jar">
+        <element id="module-output" name="LinkUp" />
+      </element>
+    </root>
+  </artifact>
+</component>

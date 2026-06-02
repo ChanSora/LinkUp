@@ -2,12 +2,13 @@ package constants;
 
 import java.awt.*;
 
+// 类似c当中的宏
 public class Constants {
     //私有化构造
     private Constants() {}
     static public final boolean HARD = true;
     static public final boolean EASY = false;
-    static public final int HARD_PATTERN_NUMBER = 12;//类似c当中的宏
+    static public final int HARD_PATTERN_NUMBER = 12;
     static public final int EASY_PATTERN_NUMBER = 5;
     static public final int HARD_ROWS = 10;
     static public final int HARD_COLS = 10;
@@ -21,6 +22,10 @@ public class Constants {
     static public final int CHOSEN = 1;
     static public final int CANCEL_CHOSEN = 2;
     static public final int FAIL = 3;
+    static public final int HARD_PAIR_COUNT = 50;
+    static public final int EASY_PAIR_COUNT = 16;
+    static public final int HARD_TIME_LIMIT = 240;
+    static public final int EASY_TIME_LIMIT = 120;
     static public final Color[] COLORS = new Color[]{
             new Color(255, 204, 204),
             new Color(255, 235, 179),

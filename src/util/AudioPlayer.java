@@ -8,9 +8,10 @@ import java.io.FileInputStream;
 
 public final class AudioPlayer {
     private static Thread backgroundThread;
+    private static Thread effectsThread;
     private static volatile boolean backgroundPlaying;
     private static volatile Player backgroundPlayer;
-
+    private static volatile Player effectPlayer;
     private AudioPlayer() {
     }
 
@@ -37,6 +38,10 @@ public final class AudioPlayer {
             backgroundPlayer.close();
             backgroundPlayer = null;
         }
+        if (effectPlayer != null) {
+            effectPlayer.close();
+            effectPlayer = null;
+        }
     }
 
     public static void playSuccess() {
@@ -55,9 +60,9 @@ public final class AudioPlayer {
             return;
         }
 
-        Thread thread = new Thread(() -> playFile(file, false), "sound-effect");
-        thread.setDaemon(true);
-        thread.start();
+        effectsThread = new Thread(() -> playFile(file, false), "sound-effect");
+        effectsThread.setDaemon(true);
+        effectsThread.start();
     }
 
     private static void playFile(File file, boolean background) {
@@ -65,7 +70,7 @@ public final class AudioPlayer {
             Player player = new Player(input);
             if (background) {
                 backgroundPlayer = player;
-            }
+            } else effectPlayer = player;
             player.play();
         } catch (Exception ex) {
             System.err.println("音频播放失败：" + file.getPath() + "，" + ex.getMessage());

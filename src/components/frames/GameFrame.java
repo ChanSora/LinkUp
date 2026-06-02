@@ -63,10 +63,7 @@ public class GameFrame extends JFrame implements CellClickListener {
         panel.setOnCellClick(this);
         add(panel, BorderLayout.CENTER);
 
-        if (saveData == null) restartGame();
-        else loadGame(saveData);
-
-        AudioPlayer.startBackgroundMusic();
+        startGame(saveData);
     }
     public GameStatePack buildDataPack(String text, CellState state1, CellState state2) {
         return new GameStatePack(
@@ -185,6 +182,11 @@ public class GameFrame extends JFrame implements CellClickListener {
         timer1.setRepeats(false);
         timer1.start();
     }
+    private void startGame(SaveData saveData) {
+        AudioPlayer.startBackgroundMusic();
+        if (saveData == null) restartGame();
+        else loadGame(saveData);
+    }
     // 根据存档恢复游戏
     private void loadGame(SaveData saveData) {
         setModeData(); //根据模式设置数据
@@ -257,15 +259,15 @@ public class GameFrame extends JFrame implements CellClickListener {
             rows = HARD_ROWS;
             cols = HARD_COLS;
             patternCount = HARD_PATTERN_NUMBER;
-            totalPairCount = 50; //一共100个格子，所以50对
-            totalSeconds = 240; //时间240秒
+            totalPairCount = HARD_PAIR_COUNT; //一共100个格子，所以50对
+            totalSeconds = HARD_TIME_LIMIT; //时间240秒
             fillHardCore();
         } else {
             rows = EASY_ROWS;
             cols = EASY_COLS;
             patternCount = EASY_PATTERN_NUMBER;
-            totalPairCount = 16;
-            totalSeconds = 120;
+            totalPairCount = EASY_PAIR_COUNT;
+            totalSeconds = EASY_TIME_LIMIT;
             fillEasyCore();
         }
     }
@@ -325,6 +327,7 @@ public class GameFrame extends JFrame implements CellClickListener {
                 AudioPlayer.playFAIL();
                 saveGameData(false);
                 JOptionPane.showMessageDialog(this, "失败：时间到，本局游戏结束。");
+                AudioPlayer.startBackgroundMusic();
                 restartGame();
             }
         });
