@@ -3,6 +3,7 @@ package components.frames;
 
 import components.panels.LobbyPanel;
 import ui.WindowManager;
+import util.AudioPlayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,5 +33,6 @@ public class LobbyFrame extends JFrame {
                 lobbyPanel.refreshRankList();
             }
         });
+        AudioPlayer.stopBackgroundMusic();
     }
 }
